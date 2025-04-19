@@ -1,0 +1,154 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>MATH ATTACK!</title>
+  <!--  Simple reset to delete the margins  -->
+  <style>
+    body { 
+      margin: 0px;
+      overflow: hidden;
+    }
+    .question {
+      position: absolute;
+      z-index: 100;
+      border: 2px solid black;
+      background: #FCF0CC;
+      font-family: Arial;
+      font-weight: bold;
+      font-size: 1.5rem;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }  
+    .speedIndicator {
+      position: absolute;
+      z-index: 100;
+      border: 2px solid black;
+      background: #FCF0CC;
+      font-family: Arial;
+      font-weight: bold;
+      font-size: 1.5rem;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }  
+    .titleLine {
+      position: absolute;
+      z-index: 100;
+      border: 2px solid black;
+      background: #FCF0CC;
+      font-family: Arial;
+      font-weight: bold;
+      font-size: 2rem;
+      flex-direction: column;
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+    }  
+    .titleLine2 {
+      position: absolute;
+      z-index: 100;
+      border: 2px solid black;
+      background: #FCF0CC;
+      font-family: Arial;
+      font-weight: bold;
+      font-size: 1rem;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }  
+    .progress {
+      position: absolute;
+      z-index: 100;
+      border: 2px solid black;
+      background: #5ef74a;
+      font-family: Arial;
+      font-weight: bold;
+      font-size: 1.5rem;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    } 
+    .level {
+      position: absolute;
+      z-index: 100;
+      border: 2px solid black;
+      background: #5ef74a;
+      font-family: Arial;
+      font-weight: bold;
+      font-size: 1.5rem;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }  
+    .points {
+      position: absolute;
+      z-index: 100;
+      border: 2px solid black;
+      background: #5ef74a;
+      font-family: Arial;
+      font-weight: bold;
+      font-size: 1.5rem;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }  
+    .timeRem {
+      position: absolute;
+      z-index: 100;
+      border: 2px solid black;
+      background: #5ef74a;
+      font-family: Arial;
+      font-weight: bold;
+      font-size: 1.5rem;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }  
+    canvas { width: 100%; height: 100% }
+  </style>
+  <link rel="shortcut icon" href="#">
+  <!--  Three.js CDN  -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.9/dat.gui.min.js"></script>
+  <script src="http://mrdoob.github.io/stats.js/build/stats.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/loaders/GLTFLoader.min.js"></script>
+
+</head>
+<body>
+  <div id="titleLine" class="titleLine" >
+    Attention! Captain of the USS Math Rocks: Your math<br/>
+    ability will be assessed! Press N for numbers to blast!
+  </div>
+  
+  <div id="titleLine2" class="titleLine2">
+  (use mouse to select answer number, then blast with spacebar)
+  </div>
+
+  <div id="question" class="question">
+    Question: 
+  </div>
+
+  <div id="progress" class="progress">
+    Progress: <br /> 
+  </div>
+
+  <div id="level" class="level">
+    Level: Beginner
+  </div> 
+
+  <div id="points" class="points">
+    Points earned:   0
+  </div> 
+
+  <div id="timeRem" class="timeRem">
+    Time Remaining <br />in Game:  10:00
+  </div> 
+
+  <!--  Our Three.js Script  -->
+  <script type="module" src="script.js"></script>
+  <div id="speedIndicator" class="speedIndicator">
+   ForRev: 0<br/> LeftRight: 0<br/> UpDown: 0
+  </div>
+</body>
+</html>
