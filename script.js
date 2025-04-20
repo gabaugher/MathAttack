@@ -18,12 +18,11 @@ var dodecahedron, cube, earth, moon, crosshairs;
 let numberBalls = [], origBallPosition = [], explosions = [], numTextures = [], spacecraft = [];
 
 // Global Control-Related Variable Declarations
-var ViewportAngleLR = 0, ViewportAngleUD = 0, cameraDir, theta, phi, t = 0; 
+var ViewportAngleLR = 0, ViewportAngleUD = 0, cameraDir, theta, phi, t = 0, pausedTvalue = 0; 
 const AngleIncrement = (Math.PI * 2) / 144; 
 var currentSprite = 0, previousSprite = 0;
 var Fast_ForRev = 0, Fast_LeftRight = 0, Fast_UpDown = 0;  
-var viewMode = false, pauseQuestions = false, nextLevelUpdated = false, 
-    pauseGame = false, exitProgram = false, beginTimeRemaining = false, gameOver = false;
+var viewMode = false, pauseQuestions = false, nextLevelUpdated = false, pauseGame = false, usedPausedTvalue = false, beginTimeRemaining = false, gameOver = false;
 var control = { ControlKeys1: "W:Fw, S:Rv, L:Lft, R:Rt", ControlKeys2: "U:Up, J:Dwn, Z:AllStop", ControlKeys3: "L/R Arrow: ViewMode", 
     Fast_ForRev: shipVel.z, Fast_LeftRight: shipVel.x, Fast_UpDown: shipVel.y };
 const stats = Stats();
@@ -39,20 +38,20 @@ const progress = document.getElementById( 'progress' );
 const level = document.getElementById( 'level' );
 const points = document.getElementById( 'points' );
 const timeRem = document.getElementById( 'timeRem' );
-var newQuest = false, questions = [], answers = [], index = 0; 
-var answer = 9, number = -9, previousNumber = -99, penaltyScored = false, pointsEarned = 0, timeRemaining = 600;
+var newQuest = false, questions = [], answers = [], answer = 9, index = 0; 
+var number = -9, previousNumber = -99, penaltyScored = false, pointsEarned = 0, timeRemaining = 600;
 
 function setTitleBoxPositions() {
     const w = window.innerWidth;
     titleLine.style.top = `${10}px`;
-    titleLine.style.left = `${w/2 - 460}px`;
+    titleLine.style.left = `${w/2 - 450}px`;
     titleLine2.style.bottom = `${30}px`;
-    titleLine2.style.left = `${w/2-260}px`;
+    titleLine2.style.left = `${w/2 - 290}px`;
     speedIndicator.style.bottom = `${30}px`;
     speedIndicator.style.right = `${10}px`;
     question.style.top = `${80}px`;
     question.style.left = `${30}px`;
-    progress.style.top = `${200}px`;
+    progress.style.top = `${200}px`; 
     progress.style.left = `${30}px`;
     level.style.right = `${30}px`;
     level.style.top =  `${190}px`;
@@ -493,15 +492,14 @@ function fKeyDown(event) {  // Handles when various keys are pressed
       case 'ArrowUp': { controls.changeViewAngle( "up" ); break; };
       case 'ArrowDown': { controls.changeViewAngle( "down" ); break; };
       case 'N', 'n': { controls.nKeyPressed(); break; };
-      case 'P', 'p': { togglePauseGame(); break; };
+      case 'P', 'p': { pausedTvalue = t; usedPausedTvalue = false; togglePauseGame(); break; };
       case 'W', 'w': { switchShipSprite( 1 ); shipVel.z += -0.01; viewMode = false; break; };
       case 'S', 's': { switchShipSprite( 2 ); shipVel.z += 0.01; viewMode = false; break; };
       case 'A', 'a': { switchShipSprite( 3 ); shipVel.x += -0.01; viewMode = false; break; }; 
       case 'D', 'd': { switchShipSprite( 4 ); shipVel.x += 0.01;  viewMode = false; break; };
       case 'U', 'u': { switchShipSprite( 5 ); shipVel.y += 0.01; viewMode = false; break; };
       case 'J', 'j': { switchShipSprite( 6 ); shipVel.y += -0.01; viewMode = false; break; };
-      case 'R', 'r': { gameOver = false; pauseGame = false; restartGame(); break; }
-      case 'X', 'x': { exitProgram = true; break; }
+      case 'R', 'r': { window.location.reload(); break; }
       case 'Z', 'z' : { shipVel.x = 0; shipVel.y = 0; shipVel.z = 0; viewMode = false; break; };
       case ' ': { explosionPressed( new THREE.Vector3( crosshairs.position.x, crosshairs.position.y, crosshairs.position.z ) ); break; };
       } ;
@@ -718,64 +716,42 @@ function processTimeRemaining( t ) {
     };
 };
 
-function resetInitVariables() {
-    for ( let i = -7; i < 7; i++ ) blastNumber( i, false );
-    scene.level = 0; timeRemaining = 600; t = 0; index = 0; pointsEarned = 0;
-    answer = 9; number = -9; previousNumber = -99; newQuest = false; answer = answers[ index ];
-    shipPos = new THREE.Vector3( 0, -1, 15 ); shipVel = new THREE.Vector3( 0, 0, 0 );    
-    viewMode = false, pauseQuestions = false, nextLevelUpdated = false, pauseGame = false, exitProgram = false, beginTimeRemaining = false, gameOver = false;
-    document.getElementById('question').innerHTML = "Question: " + '<br />' + questions[ index ];
-    document.getElementById('titleLine').innerHTML = 'Attention! Captain of the USS Math Rocks: Your math<br/>ability will be assessed! Press N for numbers to blast!';
-    document.getElementById('titleLine2').innerHTML = '(use mouse to select answer number, then blast with spacebar)';
-    document.getElementById('progress').innerHTML = 'Progress: ';
-    document.getElementById('level').innerHTML = 'Level: ' + levels[ scene.level ];
-    document.getElementById('points').innerHTML = 'Points earned: ' + pointsEarned;
-    processTimeRemaining( 0 );
-};
+function animate( t = 0 ) {  // Main animation function calling various control or intiation methods and rendering the scene
 
-function restartGame() {
-    resetInitVariables();
+    if (( !pauseGame ) && ( !gameOver )) {
 
-    function animate( t = 0 ) {  // Main animation function calling various control or intiation methods and rendering the scene
+        if (!usedPausedTvalue) { t = pausedTvalue; usedPausedTvalue = true; };
+        if ( beginTimeRemaining ) processTimeRemaining( t );
 
-        if (( !pauseGame ) && ( !gameOver )) {
+        controls.rotateOrWalkObjects(); // Rotates or revolves objects, randomly walks the cube
+        controls.updateShipPos();  // Updates the ship's position based on current ship velocity
 
-            if ( beginTimeRemaining ) processTimeRemaining( t );
-
-            controls.rotateOrWalkObjects(); // Rotates or revolves objects, randomly walks the cube
-            controls.updateShipPos();  // Updates the ship's position based on current ship velocity
-
-            if ( viewMode ) { controls.updateCameraPosDir(); }
-            else  {
-                camera.position.set( shipPos.x, shipPos.y +1, shipPos.z + 4 );
-                crosshairs.position.set( shipPos.x, shipPos.y + 1, shipPos.z );
-                camera.lookAt( shipPos.x, shipPos.y + 1, shipPos.z );
-            };
-
-            if (explosions.length > 0 ) { explosions.forEach( (e) => e.update(expPos) ); };   // updates each explosion particle
-            if (numberBalls.length > 0 ) { numberBalls.forEach( (e) => e.update(t) ); };   // updates each explosion particle
-
-            if (explosions.length > 0) {  // If explosion is detected while correct answer number is selected, call to correctAnswer()
-                if ( answer == number ) { penaltyScored = true; correctAnswer( number ); }  // When penaltyScored is true, penalty can't 
-                else if ( (!penaltyScored) && (answer != previousNumber) ) {   // be issued. This avoids giving a penalty for blast 
-                    pointsEarned = pointsEarned - 50; penaltyScored = true;    // explosions while the previous number is still selected 
-                }; };
-
-            if ( !pauseQuestions ) updateQuestionBox();
-            
-            if ( !nextLevelUpdated && ( answers[ index - 1 ] == 99 ) ) { nextLevelUpdated = true; nextLevel(); };
-
+        if ( viewMode ) { controls.updateCameraPosDir(); }
+        else  {
+            camera.position.set( shipPos.x, shipPos.y +1, shipPos.z + 4 );
+            crosshairs.position.set( shipPos.x, shipPos.y + 1, shipPos.z );
+            camera.lookAt( shipPos.x, shipPos.y + 1, shipPos.z );
         };
-            
-        requestAnimationFrame( animate );
-        stats3D.update();
-        renderer.render( scene, camera );
 
-        if (exitProgram) return;
+        if (explosions.length > 0 ) { explosions.forEach( (e) => e.update(expPos) ); };   // updates each explosion particle
+        if (numberBalls.length > 0 ) { numberBalls.forEach( (e) => e.update(t) ); };   // updates each explosion particle
+
+        if (explosions.length > 0) {  // If explosion is detected while correct answer number is selected, call to correctAnswer()
+            if ( answer == number ) { penaltyScored = true; correctAnswer( number ); }  // When penaltyScored is true, penalty can't 
+            else if ( (!penaltyScored) && (answer != previousNumber) ) {   // be issued. This avoids giving a penalty for blast 
+                pointsEarned = pointsEarned - 50; penaltyScored = true;    // explosions while the previous number is still selected 
+            }; };
+
+        if ( !pauseQuestions ) updateQuestionBox();
+        
+        if ( !nextLevelUpdated && ( answers[ index - 1 ] == 99 ) ) { nextLevelUpdated = true; nextLevel(); };
+
     };
-
-    animate();
+        
+    requestAnimationFrame( animate );
+    stats3D.update();
+    renderer.render( scene, camera );
 
 };
 
-restartGame();
+animate();
