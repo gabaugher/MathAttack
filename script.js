@@ -624,7 +624,7 @@ var controls = function( ) {  // Encapsulates control functions used for movemen
             beginTimeRemaining = true;
             document.getElementById('titleLine').innerHTML = 'MATH ATTACK ! ';
             document.getElementById('progress').innerHTML = 'Progress: <br />';
-            document.getElementById('titleLine2').innerHTML = '(use mouse to select answer number, then blast with spacebar)';
+            document.getElementById('titleLine2').innerHTML = 'Fly to numbers, use mouse to select answer, then blast with spacebar!';
         };
     };
 
