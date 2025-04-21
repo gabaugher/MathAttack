@@ -39,7 +39,7 @@ const level = document.getElementById( 'level' );
 const points = document.getElementById( 'points' );
 const timeRem = document.getElementById( 'timeRem' );
 var newQuest = false, questions = [], answers = [], answer = 9, index = 0; 
-var number = -9, previousNumber = -99, penaltyScored = false, pointsEarned = 0, timeRemaining = 600;
+var number = -9, previousNumber = -99, penaltyScored = false, pointsEarned = 0, timeAllotted = 900, timeRemaining = 900;
 
 function setTitleBoxPositions() {
     const w = window.innerWidth;
@@ -49,9 +49,9 @@ function setTitleBoxPositions() {
     titleLine2.style.left = `${w/2 - 290}px`;
     speedIndicator.style.bottom = `${30}px`;
     speedIndicator.style.right = `${10}px`;
-    question.style.top = `${80}px`;
+    question.style.top = `${100}px`;
     question.style.left = `${30}px`;
-    progress.style.top = `${200}px`; 
+    progress.style.top = `${220}px`; 
     progress.style.left = `${30}px`;
     level.style.right = `${30}px`;
     level.style.top =  `${190}px`;
@@ -703,7 +703,7 @@ function formatTime(t) {
   };
 
 function processTimeRemaining( t ) {
-    timeRemaining = 600 - t/1000;
+    timeRemaining = timeAllotted - t/1000;
     if ( timeRemaining < 0 ) { 
         document.getElementById( 'timeRem' ).innerHTML = 'Time Out - Mission <br /> Unsuccessful';
         processGameOver();
