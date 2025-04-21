@@ -22,7 +22,7 @@ var ViewportAngleLR = 0, ViewportAngleUD = 0, cameraDir, theta, phi, t = 0, paus
 const AngleIncrement = (Math.PI * 2) / 144; 
 var currentSprite = 0, previousSprite = 0;
 var Fast_ForRev = 0, Fast_LeftRight = 0, Fast_UpDown = 0;  
-var viewMode = false, pauseQuestions = false, nextLevelUpdated = false, pauseGame = false, usedPausedTvalue = false, beginTimeRemaining = false, gameOver = false;
+var viewMode = false, pauseQuestions = false, nextLevelUpdated = false, pauseGame = false, usedPausedTvalue = false, gameOver = false;
 var control = { ControlKeys1: "W:Fw, S:Rv, L:Lft, R:Rt", ControlKeys2: "U:Up, J:Dwn, Z:AllStop", ControlKeys3: "L/R Arrow: ViewMode", 
     Fast_ForRev: shipVel.z, Fast_LeftRight: shipVel.x, Fast_UpDown: shipVel.y };
 const stats = Stats();
@@ -621,7 +621,6 @@ var controls = function( ) {  // Encapsulates control functions used for movemen
             };
             newQuest = true;
             pauseQuestions = false;
-            beginTimeRemaining = true;
             document.getElementById('titleLine').innerHTML = 'MATH ATTACK ! ';
             document.getElementById('progress').innerHTML = 'Progress: <br />';
             document.getElementById('titleLine2').innerHTML = 'Fly to numbers, use mouse to select answer, then blast with spacebar!';
@@ -721,7 +720,7 @@ function animate( t = 0 ) {  // Main animation function calling various control 
     if (( !pauseGame ) && ( !gameOver )) {
 
         if (!usedPausedTvalue) { t = pausedTvalue; usedPausedTvalue = true; };
-        if ( beginTimeRemaining ) processTimeRemaining( t );
+        processTimeRemaining( t );
 
         controls.rotateOrWalkObjects(); // Rotates or revolves objects, randomly walks the cube
         controls.updateShipPos();  // Updates the ship's position based on current ship velocity
