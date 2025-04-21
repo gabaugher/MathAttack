@@ -578,12 +578,12 @@ function correctAnswer( answer ) {
 
 function nextLevel() {  
     document.getElementById('titleLine2').innerHTML = 'Excellent Job! YOU BEAT THE LEVEL ! <br /> Press N for next level or X to exit the game.';
-    document.getElementById('level').innerHTML = 'Level: ' + levels[ scene.level ];
     document.getElementById('progress').innerHTML = 'Progress: <br /> ALL NUMBERS BLASTED!<br />Press N for next level<br />Press X to Exit Game.<br />';
     pauseQuestions = true;
     previousNumber = number;
     number = -9;
     scene.level++;
+    document.getElementById('level').innerHTML = 'Level: ' + levels[ scene.level ];
     if (scene.level >= 3) { processGameOver(); };
 };
 
