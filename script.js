@@ -81,7 +81,7 @@ function setQuestionsAndAnswers() {
         'Solve (x - 3)(x + 5) + 1 = x^2', 'Solve 3x - 5 - 2(5x - 2) = -3(x - 9)', 'Solve 2[ 3 - ( 5x + 17 )] = 3( x + 4) - 5x', 
         'Evaluate [3 - 2(x - 4) + 7x] - 2(5x - 1) if x = 3', 'Solve x(x - 4) - 5(2x + 2) = x^2 - 4x', 'Simplify 2[3x - 4(x - 2)] + 2(x - 8)',
         'Solve 2(x - 1)(x + 6) - 10x = 6 if x < 0', 'Evaluate 4x^3 + 2x^2 - 7x + 4 if x = -2', 'Solve 4x - 2x^2 = -6 if x > 0', 
-        'GAME OVER - Press R to Restart' ];
+        'LEVEL THREE COMPLETED!!' ];
     answers = [ // Level One Answers
         -4, -6, 7,
         3, 5, -3, 
@@ -583,16 +583,17 @@ function nextLevel() {
     previousNumber = number;
     number = -9;
     scene.level++;
+    nextLevelUpdated = true;
     document.getElementById('level').innerHTML = 'Level: ' + levels[ scene.level ];
-    if (scene.level >= 3) { processGameOver(); };
+    if (scene.level > 2) { processGameOver(); };
 };
 
 function processGameOver() {
-    beginTimeRemaining = false;
+    
     if ( scene.level > 2 ) {
-    document.getElementById('titleLine').innerHTML = 'YOU BEAT MATH ATTACK AND SAVED EARTH!';
-    document.getElementById('titleLine2').innerHTML = 'Excellent Job! YOU WON THE GAME !';
-    document.getElementById('progress').innerHTML = 'Progress: <br /> ALL LEVELS BEAT ! !<br /> Press X to Exit; R to Restart';
+        document.getElementById('titleLine').innerHTML = 'YOU BEAT MATH ATTACK AND SAVED EARTH!';
+        document.getElementById('titleLine2').innerHTML = 'Excellent Job! YOU WON THE GAME !';
+        document.getElementById('progress').innerHTML = 'Progress: <br /> ALL LEVELS BEAT ! !<br /> Press X to Exit; R to Restart';
     }
     else {
         document.getElementById('titleLine').innerHTML = 'Mission UNSUCCESSFUL...Earth will be invaded...';
